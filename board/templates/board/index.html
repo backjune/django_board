@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 60vw;">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class="col-1 text-center" scope="col">#</th>
+            <th class="col-6 text-center" scope="col">제목</th>
+            <th class="col-2 text-center" scope="col">글쓴이</th>
+            <th class="col-5 text-center" scope="col">작성일</th>
+            <th class="col-1 text-center" scope="col"><i class="fa-regular fa-thumbs-up fa-2x"></i></th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for post in posts %}
+            <tr>
+                <th class="text-center" scope="row">{{ page_obj.number | calculate_table_number:forloop.counter }}</th>
+                <td class="text-center">
+                    <a class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                       href="{% url 'board:post_detail' post.pk %}"
+                       style="color: inherit;">{{ post.title|truncatechars:30 }}
+                    </a>
+                </td>
+                <td class="text-center">
+                    {% if post.writer.user_id is None %}
+                     -
+                    {% else %}
+                        {% include "board/profile_img.html" %}
+                        {{ post.writer.user_id }}
+                    {% endif %}</td>
+
+                    {% if post.was_published_recently %}
+                        <td class="text-center">{{ post.created_at| timesince }} 전 </td>
+                    {% elif post.was_published_this_year %}
+                        <td class="text-center">{{ post.created_at|date:"m/d H:i" }}</td>
+                    {% else %}
+                        <td class="text-center">{{ post.created_at|date:"Y/m/d H:i" }}</td>
+                    {% endif %}
+
+                <td>{{ post_like_count_dict | get_value:post }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+      {% if start_page > 1 %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ start_page|add:'-1' }}">이전</a>
+        </li>
+      {% endif %}
+    {% for page in page_range %}
+      {% if page == page_obj.number %}
+      <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ page }}</span>
+      </li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ page }}">{{page}}</a></li>
+      {% endif %}
+    {% endfor %}
+      {% if have_next_range %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ last_page|add:'1' }}">다음</a>
+    </li>
+      {% endif %}
+  </ul>
+</nav>
+        <button type="button" class="btn btn-primary float-end" onclick="window.location.href = '{% url 'board:post_create' %}';">글쓰기</button>
+</div>
+{% endblock %}

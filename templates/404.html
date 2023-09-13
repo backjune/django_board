@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+  {% block content %}
+<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 text-center">
+                <h4 class="display-4">페이지가 없습니다.</h4>
+              <hr>
+                <a href="{% url 'board:index' %}" class="btn btn-primary">홈으로 가기</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

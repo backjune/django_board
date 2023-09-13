@@ -1,0 +1,22 @@
+a {
+text-decoration: none; color: black;
+}
+.errorlist {
+     margin: 10px 4px 0;
+    font-size: 11px;
+    line-height: 18px;
+    color: #ff3f3f;
+}
+.img-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.img-circle-small {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+

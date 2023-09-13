@@ -1,0 +1,6 @@
+{% load static %}
+{% if post.writer.profile_image %}
+    <img src="{{ post.writer.profile_image.url }}" class="img-circle-small" alt="프로필 이미지">
+{% else %}
+    <img src="{% static 'default.jpg' %}" class="img-thumbnail img-circle-small" alt="기본 이미지">
+{% endif %}

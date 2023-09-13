@@ -1,0 +1,41 @@
+{% load static %}
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-2 mb-3 border-bottom" style="margin-right: 20px">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+        </a>
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'board:index' %}" class="nav-link px-2 link-secondary">
+          <i class="fa-solid fa-house-user fa-2x"></i>
+        </a></li>
+          {% else %}
+          <li><a href="{% url 'board:index' %}" class="nav-link px-2 link-secondary">
+              <i class="fa-solid fa-house fa-2x" ></i>
+        </a></li>
+          {% endif %}
+      </ul>
+
+      <div class="col-md-3 d-flex justify-content-end align-items-center">
+          {% if user.is_authenticated %}
+            {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="img-thumbnail img-circle me-2" alt="프로필 이미지">
+            {% else %}
+                <img src="{% static 'default.jpg' %}" class="img-thumbnail img-circle me-2" alt="기본 이미지">
+            {% endif %}
+              <div class="dropdown me-4">
+                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <strong>{{user.user_id}}님</strong> </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'board:user_update' %}">비밀번호 변경</a></li>
+                    <li><a class="dropdown-item" href="{% url 'board:user_update_profile_image' %}">프로필 사진 변경</a></li>
+                  </ul>
+              </div>
+              <button type="button" class="btn btn-primary me-2" onclick="window.location.href = '{% url 'board:logout' %}';">로그아웃</button>
+          {% else %}
+        <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href = '{% url 'board:login' %}';">로그인</button>
+        <button type="button" class="btn btn-primary" onclick="window.location.href = '{% url 'board:register' %}';">회원가입</button>
+          {% endif %}
+      </div>
+    </header>

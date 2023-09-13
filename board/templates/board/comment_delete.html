@@ -1,0 +1,20 @@
+<div class="modal fade" id="delete_comment_Modal" tabindex="-1" aria-labelledby="delete_comment_ModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+        <h1 class="modal-title fs-5" id="delete_comment_ModalLabel">주의</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+              <div class="modal-body">
+                  <strong>정말로 댓글을 삭제하시겠습니까?</strong>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                  <form method="post" action="{% url 'board:comment_delete' comment.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">삭제</button>
+                    </form>
+              </div>
+            </div>
+          </div>
+        </div>

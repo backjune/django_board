@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">{{ post.title }}</h1>
+            {% if post.writer.user_id is None %}
+                <p class="text-end mb-2">-</p>
+            {% else %}
+                <div class="d-flex align-items-center justify-content-end">
+                    {% include "board/profile_img.html" %}
+                    <strong>{{ post.writer.user_id }}</strong>
+                </div>
+            {% endif %}
+                <p class="text-end mb-2">{{ post.created_at|date:"Y/m/d H:i" }}</p>
+            {% if user.is_authenticated and user == post.writer %}
+            <div class="d-flex justify-content-end">
+                <a class="mx-3" href="{% url 'board:post_update' post.pk %}"><i class="fa fa-edit text-success fa-lg"></i></a>
+                <a href="" data-bs-toggle="modal" data-bs-target="#delete_post_Modal"> <i class="fa fa-trash text-danger fa-lg"></i></a>
+                <!-- delete modal -->
+                 {% include 'board/post_delete.html' %}
+            </div>
+            {% endif %}
+            {% if user.is_authenticated and user != post.writer %}
+            <div class="d-flex justify-content-end">
+                {% if like_post %}
+                <a href="{% url 'board:post_like' post.pk %}">
+                    <i class="fa-regular fa-thumbs-down fa-1x"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'board:post_like' post.pk %}">
+                    <i class="fa-regular fa-thumbs-up fa-1x"></i>
+                </a>
+                {% endif %}
+                <strong style="margin-left: 5px;"> 좋아요 {{ post_like_count }}</strong>
+            </div>
+            {% endif %}
+            <hr>
+
+            <p>{{ post.content }}</p>
+        </div>
+    </div>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <hr>
+        {% for comment in comments %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        {% if comment.user.profile_image %}
+                             <img src="{{ comment.user.profile_image.url }}" class="img-thumbnail img-circle-small" alt="프로필 이미지">
+                        {% else %}
+                             <img src="{% static 'default.jpg' %}" class="img-thumbnail img-circle-small" alt="기본 이미지">
+                        {% endif %}
+                        <strong>{{ comment.user.user_id }}</strong>
+                    </div>
+                    <small>
+                        {% if comment.was_published_recently %}
+                            {{ comment.created_at| timesince }} 전
+                        {% elif comment.was_published_this_year %}
+                            {{ comment.created_at|date:"m/d H:i" }}
+                        {% else %}
+                            {{ comment.created_at|date:"Y/m/d H:i" }}
+                        {% endif %}
+                    </small>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                <p>{{ comment.content }}</p>
+                {% if user.is_authenticated and user == comment.user %}
+                    <div>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#delete_comment_Modal">
+                        <i class="fa fa-trash text-danger fa-lg"></i>
+                    </a>
+                    </div>
+                    {% include 'board/comment_delete.html' %}
+                {% endif %}
+                </div>
+            </div>
+                <hr>
+        {% endfor %}
+
+        <form action="{% url 'board:comment_create' post.pk %}" method="post">
+            {% csrf_token %}
+            <textarea name="comment_text" class="form-control mb-2" placeholder="댓글을 입력하세요"></textarea>
+            <button class="btn btn-primary float-end">댓글 등록</button>
+        </form>
+    </div>
+</div>
+</div>
+
+{% endblock %}
